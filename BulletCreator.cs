@@ -4,13 +4,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class BulletCreator : MonoBehaviour
 {
-    [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private WaitForSeconds _delayShooting;  
+    [SerializeField] private Rigidbody _bulletPrefab;
+    [SerializeField] private WaitForSeconds _delayShooting;
     [SerializeField] private Transform _target;
     [SerializeField] private float _speed;
 
     private void Start()
     {
+        _bulletPrefab = GetComponent<Rigidbody>();
+
         StartCoroutine(Shoot());
     }
 
@@ -19,10 +21,10 @@ public class BulletCreator : MonoBehaviour
         while (true)
         {
             Vector3 direction = (_target.position - transform.position).normalized;
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position + direction, Quaternion.identity);
+            Rigidbody bullet = Instantiate(_bulletPrefab, transform.position + direction, Quaternion.identity);
 
             bullet.transform.up = direction;
-            bullet.GetComponent<Rigidbody>().velocity = direction * _speed;
+            bullet.velocity = direction * _speed;
 
             yield return _delayShooting;
         }
